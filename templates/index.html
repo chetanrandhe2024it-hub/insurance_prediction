@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareCast — Insurance Premium Estimator</title>
+  <meta name="description" content="Minimal, accurate AI medical insurance premium estimator.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Minimal Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="logo-text">CareCast <span class="logo-ai">AI</span></h1>
+          <p class="logo-sub">Medical Premium Intelligence</p>
+        </div>
+      </div>
+
+      <div class="header-tag">
+        <span class="status-dot"></span>
+        <span>R² <strong>87.2%</strong> Tuned RF</span>
+      </div>
+    </header>
+
+    <!-- Quick Presets -->
+    <div class="presets-bar">
+      <span class="presets-title">Presets:</span>
+      <div class="preset-pills">
+        <button type="button" class="preset-chip" data-preset="young">Young Healthy (22y)</button>
+        <button type="button" class="preset-chip" data-preset="family">Family Parent (38y)</button>
+        <button type="button" class="preset-chip" data-preset="smoker">Smoker Profile (46y)</button>
+        <button type="button" class="preset-chip" data-preset="senior">Senior Plan (62y)</button>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <main class="grid-layout">
+      <!-- Input Panel -->
+      <section class="panel form-panel">
+        <form id="prediction-form" novalidate>
+          <!-- Age -->
+          <div class="control-group">
+            <div class="control-header">
+              <label for="age">Age</label>
+              <span class="highlight-val" id="age-display">30 yrs</span>
+            </div>
+            <input type="range" id="age" name="age" min="18" max="75" value="30" class="custom-range">
+            <div class="range-scale">
+              <span>18</span>
+              <span>35</span>
+              <span>50</span>
+              <span>65</span>
+              <span>75</span>
+            </div>
+          </div>
+
+          <!-- Sex & Smoker row -->
+          <div class="row-two-col">
+            <!-- Sex -->
+            <div class="control-group">
+              <label class="compact-label">Sex</label>
+              <div class="pill-toggle">
+                <label class="toggle-option">
+                  <input type="radio" name="sex" value="male" checked>
+                  <span class="toggle-btn">Male</span>
+                </label>
+                <label class="toggle-option">
+                  <input type="radio" name="sex" value="female">
+                  <span class="toggle-btn">Female</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Smoker -->
+            <div class="control-group">
+              <label class="compact-label">Smoker</label>
+              <div class="pill-toggle smoker-toggle">
+                <label class="toggle-option">
+                  <input type="radio" name="smoker" value="no" checked>
+                  <span class="toggle-btn">No</span>
+                </label>
+                <label class="toggle-option">
+                  <input type="radio" name="smoker" value="yes">
+                  <span class="toggle-btn alert-btn">Yes</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- BMI -->
+          <div class="control-group">
+            <div class="control-header">
+              <label for="bmi">Body Mass Index (BMI)</label>
+              <span class="bmi-badge" id="bmi-badge">Normal</span>
+            </div>
+            <div class="input-wrapper">
+              <input type="number" id="bmi" name="bmi" step="0.1" min="12" max="60" value="25.5" required class="custom-input">
+              <span class="input-unit">kg/m²</span>
+            </div>
+          </div>
+
+          <!-- Children -->
+          <div class="control-group">
+            <label class="compact-label">Children / Dependents</label>
+            <div class="children-selector" id="children-pills">
+              <button type="button" class="num-chip" data-val="0">0</button>
+              <button type="button" class="num-chip active" data-val="1">1</button>
+              <button type="button" class="num-chip" data-val="2">2</button>
+              <button type="button" class="num-chip" data-val="3">3</button>
+              <button type="button" class="num-chip" data-val="4">4</button>
+              <button type="button" class="num-chip" data-val="5">5+</button>
+            </div>
+            <input type="hidden" id="children" name="children" value="1">
+          </div>
+
+          <!-- Region -->
+          <div class="control-group">
+            <label class="compact-label">Region</label>
+            <div class="region-pills">
+              <label class="region-pill">
+                <input type="radio" name="region" value="northwest" checked>
+                <span>Northwest</span>
+              </label>
+              <label class="region-pill">
+                <input type="radio" name="region" value="northeast">
+                <span>Northeast</span>
+              </label>
+              <label class="region-pill">
+                <input type="radio" name="region" value="southwest">
+                <span>Southwest</span>
+              </label>
+              <label class="region-pill">
+                <input type="radio" name="region" value="southeast">
+                <span>Southeast</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="submit-action" id="btn-submit">
+            <span class="btn-caption">Calculate Estimate</span>
+            <span class="btn-spinner" style="display: none;"></span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Output Panel -->
+      <section class="panel result-panel">
+        <div class="result-header">
+          <span class="result-label">Predicted Annual Premium</span>
+          <span class="risk-pill" id="risk-tier">Low Risk</span>
+        </div>
+
+        <div class="result-hero">
+          <div class="main-price" id="predicted-annual">₹0.00</div>
+          <div class="monthly-price">
+            Approx. <span id="predicted-monthly">₹0.00</span> / month
+          </div>
+        </div>
+
+        <!-- Risk Factors Breakdown -->
+        <div class="factor-box">
+          <span class="factor-title">Actuarial Cost Factors</span>
+          <ul class="factor-items" id="factor-list">
+            <li>Select your profile and calculate estimate.</li>
+          </ul>
+        </div>
+
+        <!-- Minimal Details Row -->
+        <div class="meta-row">
+          <div class="meta-col">
+            <span class="meta-label">Patient</span>
+            <span class="meta-val" id="meta-patient">30y, Male</span>
+          </div>
+          <div class="meta-col">
+            <span class="meta-label">BMI & Dependents</span>
+            <span class="meta-val" id="meta-bmi-kids">25.5 • 1 child</span>
+          </div>
+          <div class="meta-col">
+            <span class="meta-label">Region & Smoker</span>
+            <span class="meta-val" id="meta-region-smoker">Northwest • No</span>
+          </div>
+        </div>
+
+        <!-- Copy Action -->
+        <button type="button" class="btn-copy" id="btn-copy">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          Copy Calculation
+        </button>
+      </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast" style="display: none;"></div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
